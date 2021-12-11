@@ -7,11 +7,11 @@ type IT<'a> = Peekable<Chars<'a>>;
 pub enum Token {
     BrOpen,
     BrClose,
-    Swap,
+    Pipe,
     String(String),
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Tokenizer<'a> {
     it: IT<'a>,
 }
@@ -48,7 +48,7 @@ impl<'a> Iterator for Tokenizer<'a> {
                 ' ' | '\n' | '\t' => {}, 
                 '{' => return Some(Ok(Token::BrOpen)),
                 '}' => return Some(Ok(Token::BrClose)),
-                '|' => return Some(Ok(Token::Swap)),
+                '|' => return Some(Ok(Token::Pipe)),
                 v if is_word(v) => { return Some(Ok(Token::String(word_token(&mut self.it, v)))) },
                 c => return Some(Err(format!("unexpected '{}'", c)))
             }
@@ -67,12 +67,12 @@ mod tests {
         assert_eq!(tk.next(), Some(Ok(Token::String("hello".to_string()))));
         assert_eq!(tk.next(), Some(Ok(Token::BrOpen)));
         assert_eq!(tk.next(), Some(Ok(Token::String("world".to_string()))));
-        assert_eq!(tk.next(), Some(Ok(Token::Swap)));
+        assert_eq!(tk.next(), Some(Ok(Token::Pipe)));
         assert_eq!(tk.next(), Some(Ok(Token::String("planet".to_string()))));
         assert_eq!(tk.next(), Some(Ok(Token::BrClose)));
         assert_eq!(tk.next(), Some(Ok(Token::BrOpen)));
         assert_eq!(tk.next(), Some(Ok(Token::String("world".to_string()))));
-        assert_eq!(tk.next(), Some(Ok(Token::Swap)));
+        assert_eq!(tk.next(), Some(Ok(Token::Pipe)));
         assert_eq!(tk.next(), Some(Ok(Token::String("planet".to_string()))));
         assert_eq!(tk.next(), Some(Ok(Token::BrClose)));
     }
