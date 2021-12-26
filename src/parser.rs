@@ -1,4 +1,3 @@
-// mod token;
 use std::iter::Peekable;
 use std::str::FromStr;
 use crate::token::*;
